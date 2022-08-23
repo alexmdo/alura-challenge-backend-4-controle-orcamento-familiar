@@ -1,11 +1,11 @@
 package br.com.alexmdo.controleorcamentofamiliar.controller.dto;
 
 import br.com.alexmdo.controleorcamentofamiliar.model.Receita;
-import lombok.*;
+import lombok.Data;
 
-import javax.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.List;
 
 @Data
 public class ReceitaDTO {
@@ -20,6 +20,10 @@ public class ReceitaDTO {
         this.descricao = receita.getDescricao();
         this.valor = receita.getValor();
         this.data = receita.getData();
+    }
+
+    public static List<ReceitaDTO> converter(List<Receita> receitas) {
+        return receitas.stream().map(ReceitaDTO::new).toList();
     }
 
     public Receita converter() {

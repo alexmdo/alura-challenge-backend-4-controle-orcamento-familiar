@@ -7,6 +7,7 @@ import br.com.alexmdo.controleorcamentofamiliar.model.Receita;
 import br.com.alexmdo.controleorcamentofamiliar.repository.ReceitaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -45,6 +46,11 @@ public class ReceitaController {
 
         URI uri = uriBuilder.path("/receitas/{id}").buildAndExpand(receita.getId()).toUri();
         return ResponseEntity.created(uri).body(new ReceitaDTO(receita));
+    }
+
+    @GetMapping("/receitas")
+    public List<ReceitaDTO> listar() {
+        return ReceitaDTO.converter(receitaRepository.findAll());
     }
 
 }
