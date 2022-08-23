@@ -1,6 +1,5 @@
 package br.com.alexmdo.controleorcamentofamiliar.exception;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.http.HttpStatus;
@@ -17,8 +16,11 @@ import java.util.List;
 @RestControllerAdvice
 public class ValidationErrorHandler {
 
-    @Autowired
-    private MessageSource messageSource;
+    private final MessageSource messageSource;
+
+    public ValidationErrorHandler(MessageSource messageSource) {
+        this.messageSource = messageSource;
+    }
 
     @ResponseStatus(code = HttpStatus.BAD_REQUEST)
     @ExceptionHandler(MethodArgumentNotValidException.class)
@@ -38,7 +40,7 @@ public class ValidationErrorHandler {
     @ResponseStatus(code = HttpStatus.BAD_REQUEST)
     @ExceptionHandler(IncomeDuplicateException.class)
     public List<FormErrorDTO> handle(IncomeDuplicateException exception) {
-        return Arrays.asList(new FormErrorDTO("descricao", exception.getMessage()));
+        return List.of(new FormErrorDTO("descricao", exception.getMessage()));
     }
 
 }
