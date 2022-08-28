@@ -1,0 +1,31 @@
+_id: req_924659e6ad1a422a94ff38255bc6ecfa
+type: Request
+parentId: fld_e473390ac2ef4d5287b72519cf5a1baf
+modified: 1661301350032
+created: 1661301242913
+url: http://localhost:8080/receitas/1
+name: /receitas/{id}
+description: ""
+method: PUT
+body:
+  mimeType: application/json
+  text: |-
+    {
+      "descricao": "Premio 3",
+      "valor": 10000,
+      "data": "2021-08-21"
+    }
+parameters: []
+headers:
+  - name: Content-Type
+    value: application/json
+    id: pair_266a26ebd6ef44918a602db65ce22f14
+authentication: {}
+metaSortKey: -1661301052447.5
+isPrivate: false
+settingStoreCookies: true
+settingSendCookies: true
+settingDisableRenderRequestBody: false
+settingEncodeUrl: true
+settingRebuildPath: true
+settingFollowRedirects: global

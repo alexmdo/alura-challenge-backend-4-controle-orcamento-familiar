@@ -1,0 +1,31 @@
+_id: req_f89723b5c196438284b4340f7da679cc
+type: Request
+parentId: fld_0697201df87546c2a42a986bb527d65f
+modified: 1661301437907
+created: 1661301341474
+url: http://localhost:8080/despesas/2
+name: /despesas/{id}
+description: ""
+method: PUT
+body:
+  mimeType: application/json
+  text: |-
+    {
+      "descricao": "Premio 3",
+      "valor": 10000,
+      "data": "2021-08-21"
+    }
+parameters: []
+headers:
+  - name: Content-Type
+    value: application/json
+    id: pair_266a26ebd6ef44918a602db65ce22f14
+authentication: {}
+metaSortKey: -1661301052447.5
+isPrivate: false
+settingStoreCookies: true
+settingSendCookies: true
+settingDisableRenderRequestBody: false
+settingEncodeUrl: true
+settingRebuildPath: true
+settingFollowRedirects: global

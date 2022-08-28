@@ -1,0 +1,31 @@
+_id: req_c6f75a97b5314594a7bdc167b6bf30c3
+type: Request
+parentId: fld_e473390ac2ef4d5287b72519cf5a1baf
+modified: 1661725757992
+created: 1661725557507
+url: http://localhost:8080/receitas?descricao=prem
+name: /receitas?descricao=xpto
+description: ""
+method: GET
+body:
+  mimeType: application/json
+  text: |-
+    {
+      "descricao": "Premio 1",
+      "valor": 10000,
+      "data": "2021-08-21"
+    }
+parameters: []
+headers:
+  - name: Content-Type
+    value: application/json
+    id: pair_7ab222c70ac04b078c1945cd8a062874
+authentication: {}
+metaSortKey: -1661301052481.875
+isPrivate: false
+settingStoreCookies: true
+settingSendCookies: true
+settingDisableRenderRequestBody: false
+settingEncodeUrl: true
+settingRebuildPath: true
+settingFollowRedirects: global
