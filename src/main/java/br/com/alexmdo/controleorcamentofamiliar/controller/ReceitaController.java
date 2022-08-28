@@ -16,7 +16,6 @@ import java.net.URI;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/receitas")
@@ -50,9 +49,14 @@ public class ReceitaController {
     }
 
     @GetMapping()
-    public List<ReceitaDTO> findAll() {
-        return ReceitaDTO.converter(receitaRepository.findAll());
+    public List<ReceitaDTO> findByDescriptionOrAll(@RequestParam(required = false) String descricao) {
+        if (descricao == null || descricao.isBlank()) {
+            return ReceitaDTO.converter(receitaRepository.findAll());
+        } else {
+            return ReceitaDTO.converter(receitaRepository.findByDescricaoContaining(descricao));
+        }
     }
+
     @GetMapping("/{id}")
     public ResponseEntity<ReceitaDTO> getDetail(@PathVariable final Long id) {
         Optional<Receita> receitaOptional = receitaRepository.findById(id);

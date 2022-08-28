@@ -11,4 +11,6 @@ public interface ReceitaRepository extends JpaRepository<Receita, Long> {
 
     List<Receita> findByDescricao(String descricao);
 
+    List<Receita> findByDescricaoContaining(String descricao);
+
 }
