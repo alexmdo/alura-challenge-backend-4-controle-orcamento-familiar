@@ -2,6 +2,8 @@ package br.com.alexmdo.controleorcamentofamiliar.controller.form;
 
 import br.com.alexmdo.controleorcamentofamiliar.exception.IncomeDuplicateException;
 import br.com.alexmdo.controleorcamentofamiliar.model.Categoria;
+import br.com.alexmdo.controleorcamentofamiliar.model.CategoriaId;
+import br.com.alexmdo.controleorcamentofamiliar.model.CategoriaType;
 import br.com.alexmdo.controleorcamentofamiliar.model.Despesa;
 import br.com.alexmdo.controleorcamentofamiliar.repository.DespesaRepository;
 import lombok.Data;
@@ -23,9 +25,14 @@ public class DespesaForm {
     private BigDecimal valor;
     @NotNull
     private LocalDate data;
+    private String categoria;
 
     public Despesa converter() {
-        return new Despesa(null, getDescricao(), getValor(), getData(), null);
+        if (categoria == null || categoria.isBlank()) {
+            this.categoria = "Outras";
+        }
+
+        return new Despesa(null, getDescricao(), getValor(), getData(), new Categoria(new CategoriaId(categoria, CategoriaType.DESPESA)));
     }
 
     public Despesa atualizar(long id, DespesaRepository despesaRepository) {
@@ -50,5 +57,20 @@ public class DespesaForm {
         }
 
         return null;
+    }
+
+    public Despesa salvar(DespesaRepository despesaRepository) {
+        Despesa despesa = this.converter();
+
+        List<Despesa> despesas = despesaRepository.findByDescricao(despesa.getDescricao());
+        List<Despesa> despesasFilteredByCurrentMonth = despesas
+                .stream()
+                .filter(obj -> obj.getData().getMonth() == LocalDate.now().getMonth())
+                .toList();
+        if (!despesasFilteredByCurrentMonth.isEmpty()) {
+            throw new IncomeDuplicateException("Despesa duplicada no mesmo mês");
+        }
+
+        return despesaRepository.save(despesa);
     }
 }

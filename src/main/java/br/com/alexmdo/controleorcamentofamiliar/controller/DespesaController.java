@@ -31,19 +31,7 @@ public class DespesaController {
     @PostMapping()
     @Transactional
     public ResponseEntity<DespesaDTO> save(@RequestBody @Valid final DespesaForm form, final UriComponentsBuilder uriBuilder) {
-        Despesa despesa = form.converter();
-
-        List<Despesa> despesas = despesaRepository.findByDescricao(despesa.getDescricao());
-        List<Despesa> despesasFilteredByCurrentMonth = despesas
-                .stream()
-                .filter(obj -> obj.getData().getMonth() == LocalDate.now().getMonth())
-                .toList();
-        if (!despesasFilteredByCurrentMonth.isEmpty()) {
-            throw new IncomeDuplicateException("Despesa duplicada no mesmo mês");
-        }
-
-        despesa = despesaRepository.save(despesa);
-
+        Despesa despesa = form.salvar(despesaRepository);
         URI uri = uriBuilder.path("/despesas/{id}").buildAndExpand(despesa.getId()).toUri();
         return ResponseEntity.created(uri).body(new DespesaDTO(despesa));
     }

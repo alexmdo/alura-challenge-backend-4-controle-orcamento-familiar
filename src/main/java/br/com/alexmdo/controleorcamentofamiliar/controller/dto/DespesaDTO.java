@@ -15,12 +15,14 @@ public class DespesaDTO {
     private String descricao;
     private BigDecimal valor;
     private LocalDate data;
+    private String categoria;
 
     public DespesaDTO(Despesa despesa) {
         this.id = despesa.getId();
         this.descricao = despesa.getDescricao();
         this.valor = despesa.getValor();
         this.data = despesa.getData();
+        this.categoria = despesa.getCategoria().getId().getDescricao();
     }
 
     public static List<DespesaDTO> converter(List<Despesa> receitas) {
