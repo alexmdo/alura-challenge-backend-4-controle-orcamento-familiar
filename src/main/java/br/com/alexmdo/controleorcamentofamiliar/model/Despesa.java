@@ -27,7 +27,6 @@ public class Despesa {
     private LocalDate data;
 
     @ManyToOne
-    @JoinColumn(name = "categoria_id")
     private Categoria categoria;
 
     @Override

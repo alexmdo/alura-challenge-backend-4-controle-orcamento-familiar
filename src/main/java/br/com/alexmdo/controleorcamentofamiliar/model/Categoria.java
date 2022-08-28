@@ -14,15 +14,9 @@ import java.util.Objects;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Categoria {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", nullable = false)
-    private Long id;
 
-    private String descricao;
-
-    @Enumerated(EnumType.STRING)
-    private CategoriaType categoriaType;
+    @EmbeddedId
+    private CategoriaId id;
 
     @Override
     public boolean equals(Object o) {
@@ -34,6 +28,6 @@ public class Categoria {
 
     @Override
     public int hashCode() {
-        return getClass().hashCode();
+        return Objects.hash(id);
     }
 }
