@@ -2,6 +2,7 @@ package br.com.alexmdo.controleorcamentofamiliar.repository;
 
 import br.com.alexmdo.controleorcamentofamiliar.model.Despesa;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -11,4 +12,8 @@ public interface DespesaRepository extends JpaRepository<Despesa, Long> {
 
     List<Despesa> findByDescricao(String descricao);
 
+    List<Despesa> findByDescricaoContaining(String descricao);
+
+    @Query(value = "SELECT * FROM despesas r WHERE year(r.data) = :year AND month(r.data) = :month ", nativeQuery = true)
+    List<Despesa> findByYearAndMonth(Integer year, Integer month);
 }

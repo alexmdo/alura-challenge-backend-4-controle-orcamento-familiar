@@ -57,6 +57,11 @@ public class ReceitaController {
         }
     }
 
+    @GetMapping("/{ano}/{mes}")
+    public List<ReceitaDTO> findByYearAndMonth(@PathVariable final Integer ano, @PathVariable final Integer mes) {
+        return ReceitaDTO.converter(receitaRepository.findByYearAndMonth(ano, mes));
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<ReceitaDTO> getDetail(@PathVariable final Long id) {
         Optional<Receita> receitaOptional = receitaRepository.findById(id);

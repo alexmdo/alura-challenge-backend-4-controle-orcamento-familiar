@@ -2,7 +2,6 @@ package br.com.alexmdo.controleorcamentofamiliar.controller;
 
 import br.com.alexmdo.controleorcamentofamiliar.controller.dto.DespesaDTO;
 import br.com.alexmdo.controleorcamentofamiliar.controller.form.DespesaForm;
-import br.com.alexmdo.controleorcamentofamiliar.exception.IncomeDuplicateException;
 import br.com.alexmdo.controleorcamentofamiliar.model.Despesa;
 import br.com.alexmdo.controleorcamentofamiliar.repository.DespesaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +12,6 @@ import org.springframework.web.util.UriComponentsBuilder;
 import javax.transaction.Transactional;
 import javax.validation.Valid;
 import java.net.URI;
-import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -37,13 +35,23 @@ public class DespesaController {
     }
 
     @GetMapping()
-    public List<DespesaDTO> findAll() {
-        return DespesaDTO.converter(despesaRepository.findAll());
+    public List<DespesaDTO> findByDescriptionOrAll(@RequestParam(required = false) String descricao) {
+        if (descricao == null || descricao.isBlank()) {
+            return DespesaDTO.converter(despesaRepository.findAll());
+        } else {
+            return DespesaDTO.converter(despesaRepository.findByDescricaoContaining(descricao));
+        }
     }
+
     @GetMapping("/{id}")
     public ResponseEntity<DespesaDTO> getDetail(@PathVariable final Long id) {
         Optional<Despesa> despesaOptional = despesaRepository.findById(id);
         return despesaOptional.map(despesa -> ResponseEntity.ok(new DespesaDTO(despesa))).orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
+    @GetMapping("/{ano}/{mes}")
+    public List<DespesaDTO> findByYearAndMonth(@PathVariable final Integer ano, @PathVariable final Integer mes) {
+        return DespesaDTO.converter(despesaRepository.findByYearAndMonth(ano, mes));
     }
 
     @PutMapping("/{id}")
