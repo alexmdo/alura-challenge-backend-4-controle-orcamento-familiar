@@ -28,7 +28,7 @@ public class DespesaDTO {
     }
 
     public Despesa converter() {
-        return new Despesa(getId(), getDescricao(), getValor(), getData());
+        return new Despesa(getId(), getDescricao(), getValor(), getData(), null);
     }
 
 }

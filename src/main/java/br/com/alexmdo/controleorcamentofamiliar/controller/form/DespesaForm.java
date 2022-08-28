@@ -1,6 +1,7 @@
 package br.com.alexmdo.controleorcamentofamiliar.controller.form;
 
 import br.com.alexmdo.controleorcamentofamiliar.exception.IncomeDuplicateException;
+import br.com.alexmdo.controleorcamentofamiliar.model.Categoria;
 import br.com.alexmdo.controleorcamentofamiliar.model.Despesa;
 import br.com.alexmdo.controleorcamentofamiliar.repository.DespesaRepository;
 import lombok.Data;
@@ -24,7 +25,7 @@ public class DespesaForm {
     private LocalDate data;
 
     public Despesa converter() {
-        return new Despesa(null, getDescricao(), getValor(), getData());
+        return new Despesa(null, getDescricao(), getValor(), getData(), null);
     }
 
     public Despesa atualizar(long id, DespesaRepository despesaRepository) {
