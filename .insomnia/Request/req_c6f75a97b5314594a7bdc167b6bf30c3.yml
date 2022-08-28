@@ -1,7 +1,7 @@
 _id: req_c6f75a97b5314594a7bdc167b6bf30c3
 type: Request
 parentId: fld_e473390ac2ef4d5287b72519cf5a1baf
-modified: 1661725757992
+modified: 1661727860552
 created: 1661725557507
 url: http://localhost:8080/receitas?descricao=prem
 name: /receitas?descricao=xpto
@@ -21,7 +21,7 @@ headers:
     value: application/json
     id: pair_7ab222c70ac04b078c1945cd8a062874
 authentication: {}
-metaSortKey: -1661301052481.875
+metaSortKey: -1661301052450.625
 isPrivate: false
 settingStoreCookies: true
 settingSendCookies: true
