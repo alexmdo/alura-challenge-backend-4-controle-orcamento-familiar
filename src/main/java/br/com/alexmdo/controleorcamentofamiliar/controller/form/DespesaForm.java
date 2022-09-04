@@ -40,12 +40,8 @@ public class DespesaForm {
         if (despesaOptional.isPresent()) {
             Despesa despesa = despesaOptional.get();
 
-            List<Despesa> despesas = despesaRepository.findByDescricao(getDescricao());
-            List<Despesa> despesasFilteredByCurrentMonth = despesas
-                    .stream()
-                    .filter(obj -> obj.getData().getMonth() == LocalDate.now().getMonth())
-                    .toList();
-            if (!despesasFilteredByCurrentMonth.isEmpty()) {
+            List<Despesa> despesas = despesaRepository.findByYearMonthAndDescription(despesa.getData().getYear(), despesa.getData().getMonthValue(), despesa.getDescricao());
+            if (!despesas.isEmpty()) {
                 throw new IncomeDuplicateException("Despesa duplicada no mesmo mês");
             }
 
@@ -62,12 +58,8 @@ public class DespesaForm {
     public Despesa salvar(DespesaRepository despesaRepository) {
         Despesa despesa = this.converter();
 
-        List<Despesa> despesas = despesaRepository.findByDescricao(despesa.getDescricao());
-        List<Despesa> despesasFilteredByCurrentMonth = despesas
-                .stream()
-                .filter(obj -> obj.getData().getMonth() == LocalDate.now().getMonth())
-                .toList();
-        if (!despesasFilteredByCurrentMonth.isEmpty()) {
+        List<Despesa> despesas = despesaRepository.findByYearMonthAndDescription(despesa.getData().getYear(), despesa.getData().getMonthValue(), despesa.getDescricao());
+        if (!despesas.isEmpty()) {
             throw new IncomeDuplicateException("Despesa duplicada no mesmo mês");
         }
 
