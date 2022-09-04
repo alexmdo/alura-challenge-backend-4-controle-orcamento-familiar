@@ -178,10 +178,6 @@ class ReceitaControllerTest {
     }
 
     @Test
-    void findByYearAndMonth() {
-    }
-
-    @Test
     void givenGetDetail_whenExpenseIsFound_thenItShouldReturnOkAndValidResponse() throws Exception {
         Receita receita = receitaRepository.save(new Receita(null, "ALUGUEL COTIA", BigDecimal.valueOf(2000.00), LocalDate.of(2021, 2, 15)));
 
@@ -208,6 +204,40 @@ class ReceitaControllerTest {
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound())
                 .andExpect(content().string(""));
+    }
+
+    @Test
+    void givenFindByYearAndMonth_whenExpenseIsFound_thenItShouldReturnOkAndAValidArrayResponse() throws Exception {
+        URI uri = new URI("/receitas/2021/8");
+
+        mockMvc.perform(MockMvcRequestBuilders
+                        .get(uri)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(content().json("""
+                        [
+                           	{
+                           		"descricao": "RECEITA 1",
+                           		"valor": 1000.00,
+                           		"data": "2021-08-15"
+                           	},
+                           	{
+                           		"descricao": "RECEITA 2",
+                           		"valor": 2000.00,
+                           		"data": "2021-08-20"
+                           	}
+                           ]"""));
+    }
+
+    @Test
+    void givenFindByYearAndMonth_whenExpenseIsNotFound_thenItShouldReturnOkAndNoResponse() throws Exception {
+        URI uri = new URI("/despesas/2021/-1");
+
+        mockMvc.perform(MockMvcRequestBuilders
+                        .get(uri)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(content().json("[]"));
     }
 
     @Test
