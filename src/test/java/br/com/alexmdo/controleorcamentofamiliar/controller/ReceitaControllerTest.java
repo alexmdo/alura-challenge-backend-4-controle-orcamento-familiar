@@ -69,7 +69,7 @@ class ReceitaControllerTest {
     }
 
     @Test
-    void givenSave_whenDuplicateExpenseIsFound_thenItWhouldReturn400AndAValidErrorResponse() throws Exception {
+    void givenSave_whenDuplicateIncomeIsFound_thenItWhouldReturn400AndAValidErrorResponse() throws Exception {
         URI uri = new URI("/receitas");
         String json = """
                 {
@@ -104,7 +104,7 @@ class ReceitaControllerTest {
     }
 
     @Test
-    void givenFindByDescriptionOrAll_whenExpenseIsFound_thenItShouldReturnOkAndAValidArrayResponse() throws Exception {
+    void givenFindByDescriptionOrAll_whenIncomeIsFound_thenItShouldReturnOkAndAValidArrayResponse() throws Exception {
         URI uri = new URI("/receitas?descricao=RECEITA%203");
 
         mockMvc.perform(MockMvcRequestBuilders
@@ -123,7 +123,7 @@ class ReceitaControllerTest {
     }
 
     @Test
-    void givenFindByDescriptionOrAll_whenExpenseIsNotFound_thenItShouldReturnOkAndEmptyArrayResponse() throws Exception {
+    void givenFindByDescriptionOrAll_whenIncomeIsNotFound_thenItShouldReturnOkAndEmptyArrayResponse() throws Exception {
         URI uri = new URI("/receitas?descricao=XPTO");
 
         mockMvc.perform(MockMvcRequestBuilders
@@ -178,7 +178,7 @@ class ReceitaControllerTest {
     }
 
     @Test
-    void givenGetDetail_whenExpenseIsFound_thenItShouldReturnOkAndValidResponse() throws Exception {
+    void givenGetDetail_whenIncomeIsFound_thenItShouldReturnOkAndValidResponse() throws Exception {
         Receita receita = receitaRepository.save(new Receita(null, "ALUGUEL COTIA", BigDecimal.valueOf(2000.00), LocalDate.of(2021, 2, 15)));
 
         URI uri = new URI("/receitas/" + receita.getId());
@@ -196,7 +196,7 @@ class ReceitaControllerTest {
     }
 
     @Test
-    void givenGetDetail_whenExpenseIsNotFound_thenItShouldReturnNotFoundAndNoResponse() throws Exception {
+    void givenGetDetail_whenIncomeIsNotFound_thenItShouldReturnNotFoundAndNoResponse() throws Exception {
         URI uri = new URI("/receitas/-1");
 
         mockMvc.perform(MockMvcRequestBuilders
@@ -207,7 +207,7 @@ class ReceitaControllerTest {
     }
 
     @Test
-    void givenFindByYearAndMonth_whenExpenseIsFound_thenItShouldReturnOkAndAValidArrayResponse() throws Exception {
+    void givenFindByYearAndMonth_whenIncomeIsFound_thenItShouldReturnOkAndAValidArrayResponse() throws Exception {
         URI uri = new URI("/receitas/2021/8");
 
         mockMvc.perform(MockMvcRequestBuilders
@@ -230,8 +230,8 @@ class ReceitaControllerTest {
     }
 
     @Test
-    void givenFindByYearAndMonth_whenExpenseIsNotFound_thenItShouldReturnOkAndNoResponse() throws Exception {
-        URI uri = new URI("/despesas/2021/-1");
+    void givenFindByYearAndMonth_whenIncomeIsNotFound_thenItShouldReturnOkAndNoResponse() throws Exception {
+        URI uri = new URI("/receitas/2021/-1");
 
         mockMvc.perform(MockMvcRequestBuilders
                         .get(uri)
@@ -241,7 +241,7 @@ class ReceitaControllerTest {
     }
 
     @Test
-    void givenUpdate_whenExpenseIsFound_thenItShouldReturnOkAndAValidResponse() throws Exception {
+    void givenUpdate_whenIncomeIsFound_thenItShouldReturnOkAndAValidResponse() throws Exception {
         Receita receita = receitaRepository.save(new Receita(null, "RECEITA TO DELETE", new BigDecimal("1000.00"), LocalDate.of(2021, 8, 15)));
 
         URI uri = new URI("/receitas/" + receita.getId());
@@ -266,7 +266,7 @@ class ReceitaControllerTest {
     }
 
     @Test
-    void givenUpdate_whenExpenseIsFoundAndDuplicate_thenItShouldReturnBadRequestAndAValidErrorResponse() throws Exception {
+    void givenUpdate_whenIncomeIsFoundAndDuplicate_thenItShouldReturnBadRequestAndAValidErrorResponse() throws Exception {
         Receita receita = receitaRepository.save(new Receita(null, "RECEITA DUPLICATED", new BigDecimal("1000.00"), LocalDate.of(2021, 8, 15)));
 
         URI uri = new URI("/receitas/" + receita.getId());
@@ -292,7 +292,7 @@ class ReceitaControllerTest {
     }
 
     @Test
-    void givenUpdate_whenExpenseIsNotFoundAndDuplicate_thenItShouldReturnNotFoundAndAEmptyResponse() throws Exception {
+    void givenUpdate_whenIncomeIsNotFoundAndDuplicate_thenItShouldReturnNotFoundAndAEmptyResponse() throws Exception {
         URI uri = new URI("/receitas/-1");
 
         mockMvc.perform(MockMvcRequestBuilders
