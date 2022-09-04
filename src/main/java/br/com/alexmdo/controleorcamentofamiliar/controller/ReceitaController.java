@@ -13,7 +13,6 @@ import org.springframework.web.util.UriComponentsBuilder;
 import javax.transaction.Transactional;
 import javax.validation.Valid;
 import java.net.URI;
-import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -33,12 +32,8 @@ public class ReceitaController {
     public ResponseEntity<ReceitaDTO> save(@RequestBody @Valid final ReceitaForm form, final UriComponentsBuilder uriBuilder) {
         Receita receita = form.converter();
 
-        List<Receita> receitas = receitaRepository.findByDescricao(receita.getDescricao());
-        List<Receita> receitasFilteredByCurrentMonth = receitas
-                .stream()
-                .filter(obj -> obj.getData().getMonth() == LocalDate.now().getMonth())
-                .toList();
-        if (!receitasFilteredByCurrentMonth.isEmpty()) {
+        List<Receita> receitas = receitaRepository.findByYearMonthAndDescription(receita.getData().getYear(), receita.getData().getMonthValue(), receita.getDescricao());
+        if (!receitas.isEmpty()) {
             throw new IncomeDuplicateException("Receita duplicada no mesmo mês");
         }
 

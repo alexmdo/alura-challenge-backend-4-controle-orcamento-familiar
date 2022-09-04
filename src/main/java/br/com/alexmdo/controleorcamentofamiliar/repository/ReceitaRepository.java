@@ -11,7 +11,8 @@ import java.util.List;
 @Repository
 public interface ReceitaRepository extends JpaRepository<Receita, Long> {
 
-    List<Receita> findByDescricao(String descricao);
+    @Query(value = "SELECT r from Receita r WHERE year(r.data) = :year AND month(r.data) = :month AND r.descricao = :description")
+    List<Receita> findByYearMonthAndDescription(Integer year, Integer month, String description);
 
     List<Receita> findByDescricaoContaining(String descricao);
 

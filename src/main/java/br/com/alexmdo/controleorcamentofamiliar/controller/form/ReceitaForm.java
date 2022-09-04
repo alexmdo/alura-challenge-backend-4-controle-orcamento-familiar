@@ -32,12 +32,8 @@ public class ReceitaForm {
         if (receitaOptional.isPresent()) {
             Receita receita = receitaOptional.get();
 
-            List<Receita> receitas = receitaRepository.findByDescricao(getDescricao());
-            List<Receita> receitasFilteredByCurrentMonth = receitas
-                    .stream()
-                    .filter(obj -> obj.getData().getMonth() == LocalDate.now().getMonth())
-                    .toList();
-            if (!receitasFilteredByCurrentMonth.isEmpty()) {
+            List<Receita> receitas = receitaRepository.findByYearMonthAndDescription(receita.getData().getYear(), receita.getData().getMonthValue(), receita.getDescricao());
+            if (!receitas.isEmpty()) {
                 throw new IncomeDuplicateException("Receita duplicada no mesmo mês");
             }
 
