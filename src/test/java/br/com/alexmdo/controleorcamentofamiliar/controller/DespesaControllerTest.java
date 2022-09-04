@@ -115,7 +115,32 @@ class DespesaControllerTest {
     }
 
     @Test
-    void getDetail() {
+    void givenGetDetail_whenExpenseIsFound_thenItShouldReturnOkAndValidResponse() throws Exception {
+        URI uri = new URI("/despesas/1");
+
+        mockMvc.perform(MockMvcRequestBuilders
+                        .get(uri)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(content().json("""
+                        {
+                         	"id": 1,
+                         	"descricao": "ALUGUEL COTIA",
+                         	"valor": 2000.00,
+                         	"data": "2021-02-15",
+                         	"categoria": "Moradia"
+                         }"""));
+    }
+
+    @Test
+    void givenGetDetail_whenExpenseIsNotFound_thenItShouldReturnNotFoundAndNoResponse() throws Exception {
+        URI uri = new URI("/despesas/99");
+
+        mockMvc.perform(MockMvcRequestBuilders
+                        .get(uri)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound())
+                .andExpect(content().string(""));
     }
 
     @Test
