@@ -182,7 +182,32 @@ class ReceitaControllerTest {
     }
 
     @Test
-    void getDetail() {
+    void givenGetDetail_whenExpenseIsFound_thenItShouldReturnOkAndValidResponse() throws Exception {
+        Receita receita = receitaRepository.save(new Receita(null, "ALUGUEL COTIA", BigDecimal.valueOf(2000.00), LocalDate.of(2021, 2, 15)));
+
+        URI uri = new URI("/receitas/" + receita.getId());
+
+        mockMvc.perform(MockMvcRequestBuilders
+                        .get(uri)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(content().json("{\n" +
+                                          " 	\"id\": " + receita.getId() + ",\n" +
+                                          " 	\"descricao\": \"ALUGUEL COTIA\",\n" +
+                                          " 	\"valor\": 2000.00,\n" +
+                                          " 	\"data\": \"2021-02-15\"\n" +
+                                          " }"));
+    }
+
+    @Test
+    void givenGetDetail_whenExpenseIsNotFound_thenItShouldReturnNotFoundAndNoResponse() throws Exception {
+        URI uri = new URI("/receitas/-1");
+
+        mockMvc.perform(MockMvcRequestBuilders
+                        .get(uri)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound())
+                .andExpect(content().string(""));
     }
 
     @Test
