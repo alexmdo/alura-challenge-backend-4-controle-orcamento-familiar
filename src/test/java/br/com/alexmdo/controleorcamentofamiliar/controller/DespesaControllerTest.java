@@ -1,5 +1,10 @@
 package br.com.alexmdo.controleorcamentofamiliar.controller;
 
+import br.com.alexmdo.controleorcamentofamiliar.model.Categoria;
+import br.com.alexmdo.controleorcamentofamiliar.model.CategoriaId;
+import br.com.alexmdo.controleorcamentofamiliar.model.CategoriaType;
+import br.com.alexmdo.controleorcamentofamiliar.model.Despesa;
+import br.com.alexmdo.controleorcamentofamiliar.repository.DespesaRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -9,8 +14,12 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
+import java.math.BigDecimal;
 import java.net.URI;
+import java.time.LocalDate;
+import java.util.Optional;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -23,6 +32,9 @@ class DespesaControllerTest {
     @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
     @Autowired
     MockMvc mockMvc;
+
+    @Autowired
+    DespesaRepository despesaRepository;
 
     @Test
     void givenSave_whenProvidedAValidRequest_thenItWhouldReturn201() throws Exception {
@@ -275,6 +287,32 @@ class DespesaControllerTest {
     }
 
     @Test
-    void delete() {
+    void givenDelete_whenExpenseIsFound_thenItShouldReturnOkAndEmptyResponse() throws Exception {
+        CategoriaId food = new CategoriaId("Alimentação", CategoriaType.DESPESA);
+        Categoria categoria = new Categoria(food);
+        Despesa despesaToDelete = new Despesa(null, "TO DELETE", BigDecimal.TEN, LocalDate.now(), categoria);
+        despesaToDelete = despesaRepository.save(despesaToDelete);
+
+        URI uri = new URI("/despesas/" + despesaToDelete.getId());
+
+        mockMvc.perform(MockMvcRequestBuilders
+                        .delete(uri)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(content().string(""));
+
+        Optional<Despesa> optionalDespesa = despesaRepository.findById(despesaToDelete.getId());
+        assertFalse(optionalDespesa.isPresent());
+    }
+
+    @Test
+    void givenDelete_whenExpenseIsNotFound_thenItShouldReturnNotFoundAndEmptyResponse() throws Exception {
+        URI uri = new URI("/despesas/-1");
+
+        mockMvc.perform(MockMvcRequestBuilders
+                        .delete(uri)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound())
+                .andExpect(content().string(""));
     }
 }
