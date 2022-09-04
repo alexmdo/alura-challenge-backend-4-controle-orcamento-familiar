@@ -1,6 +1,6 @@
 package br.com.alexmdo.controleorcamentofamiliar.controller;
 
-import br.com.alexmdo.controleorcamentofamiliar.model.Receita;
+import br.com.alexmdo.controleorcamentofamiliar.model.*;
 import br.com.alexmdo.controleorcamentofamiliar.repository.ReceitaRepository;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -241,7 +241,72 @@ class ReceitaControllerTest {
     }
 
     @Test
-    void update() {
+    void givenUpdate_whenExpenseIsFound_thenItShouldReturnOkAndAValidResponse() throws Exception {
+        Receita receita = receitaRepository.save(new Receita(null, "RECEITA TO DELETE", new BigDecimal("1000.00"), LocalDate.of(2021, 8, 15)));
+
+        URI uri = new URI("/receitas/" + receita.getId());
+
+        mockMvc.perform(MockMvcRequestBuilders
+                        .put(uri)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                            {
+                              "descricao": "Premio UPDATE",
+                              "valor": 10000,
+                              "data": "2021-08-21"
+                            }
+                        """))
+                .andExpect(status().isOk())
+                .andExpect(content().json("""
+                        {
+                         	"descricao": "Premio UPDATE",
+                            "valor": 10000,
+                            "data": "2021-08-21"
+                         }"""));
+    }
+
+    @Test
+    void givenUpdate_whenExpenseIsFoundAndDuplicate_thenItShouldReturnBadRequestAndAValidErrorResponse() throws Exception {
+        Receita receita = receitaRepository.save(new Receita(null, "RECEITA DUPLICATED", new BigDecimal("1000.00"), LocalDate.of(2021, 8, 15)));
+
+        URI uri = new URI("/receitas/" + receita.getId());
+
+        mockMvc.perform(MockMvcRequestBuilders
+                        .put(uri)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                            {
+                              "descricao": "RECEITA DUPLICATED",
+                              "valor": 10000,
+                              "data": "2021-08-15"
+                            }
+                        """))
+                .andExpect(status().isBadRequest())
+                .andExpect(content().json("""
+                        [
+                            {
+                                "field": "descricao",
+                                "error": "Receita duplicada no mesmo mês"
+                            }
+                        ]"""));
+    }
+
+    @Test
+    void givenUpdate_whenExpenseIsNotFoundAndDuplicate_thenItShouldReturnNotFoundAndAEmptyResponse() throws Exception {
+        URI uri = new URI("/receitas/-1");
+
+        mockMvc.perform(MockMvcRequestBuilders
+                        .put(uri)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                            {
+                              "descricao": "NOT FOUND",
+                              "valor": 10000,
+                              "data": "2021-08-21"
+                            }
+                        """))
+                .andExpect(status().isNotFound())
+                .andExpect(content().string(""));
     }
 
     @Test
