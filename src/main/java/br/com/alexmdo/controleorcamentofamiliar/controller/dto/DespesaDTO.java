@@ -29,8 +29,4 @@ public class DespesaDTO {
         return receitas.stream().map(DespesaDTO::new).toList();
     }
 
-    public Despesa converter() {
-        return new Despesa(getId(), getDescricao(), getValor(), getData(), null);
-    }
-
 }
