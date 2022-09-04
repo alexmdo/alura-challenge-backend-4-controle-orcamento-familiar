@@ -59,7 +59,7 @@ public class DespesaController {
     public ResponseEntity<DespesaDTO> update(@PathVariable final Long id, @RequestBody @Valid final DespesaForm form) {
         Optional<Despesa> despesaOptional = despesaRepository.findById(id);
         if (despesaOptional.isPresent()) {
-            Despesa despesa = form.atualizar(id, despesaRepository);
+            Despesa despesa = form.atualizar(id, form, despesaRepository);
             return ResponseEntity.ok(new DespesaDTO(despesa));
         }
 

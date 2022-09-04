@@ -35,12 +35,12 @@ public class DespesaForm {
         return new Despesa(null, getDescricao(), getValor(), getData(), new Categoria(new CategoriaId(categoria, CategoriaType.DESPESA)));
     }
 
-    public Despesa atualizar(long id, DespesaRepository despesaRepository) {
+    public Despesa atualizar(long id, DespesaForm form, DespesaRepository despesaRepository) {
         Optional<Despesa> despesaOptional = despesaRepository.findById(id);
         if (despesaOptional.isPresent()) {
             Despesa despesa = despesaOptional.get();
 
-            List<Despesa> despesas = despesaRepository.findByYearMonthAndDescription(despesa.getData().getYear(), despesa.getData().getMonthValue(), despesa.getDescricao());
+            List<Despesa> despesas = despesaRepository.findByYearMonthAndDescription(form.getData().getYear(), form.getData().getMonthValue(), form.getDescricao());
             if (!despesas.isEmpty()) {
                 throw new IncomeDuplicateException("Despesa duplicada no mesmo mês");
             }
