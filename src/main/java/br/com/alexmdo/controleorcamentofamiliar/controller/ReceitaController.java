@@ -68,7 +68,7 @@ public class ReceitaController {
     public ResponseEntity<ReceitaDTO> update(@PathVariable final Long id, @RequestBody @Valid final ReceitaForm form) {
         Optional<Receita> receitaOptional = receitaRepository.findById(id);
         if (receitaOptional.isPresent()) {
-            Receita receita = form.atualizar(id, receitaRepository);
+            Receita receita = form.atualizar(id, form, receitaRepository);
             return ResponseEntity.ok(new ReceitaDTO(receita));
         }
 

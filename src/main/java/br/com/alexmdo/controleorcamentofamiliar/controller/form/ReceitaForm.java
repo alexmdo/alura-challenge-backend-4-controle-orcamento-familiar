@@ -27,12 +27,12 @@ public class ReceitaForm {
         return new Receita(null, getDescricao(), getValor(), getData());
     }
 
-    public Receita atualizar(long id, ReceitaRepository receitaRepository) {
+    public Receita atualizar(long id, ReceitaForm form, ReceitaRepository receitaRepository) {
         Optional<Receita> receitaOptional = receitaRepository.findById(id);
         if (receitaOptional.isPresent()) {
             Receita receita = receitaOptional.get();
 
-            List<Receita> receitas = receitaRepository.findByYearMonthAndDescription(receita.getData().getYear(), receita.getData().getMonthValue(), receita.getDescricao());
+            List<Receita> receitas = receitaRepository.findByYearMonthAndDescription(form.getData().getYear(), form.getData().getMonthValue(), form.getDescricao());
             if (!receitas.isEmpty()) {
                 throw new IncomeDuplicateException("Receita duplicada no mesmo mês");
             }
