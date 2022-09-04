@@ -144,7 +144,55 @@ class DespesaControllerTest {
     }
 
     @Test
-    void findByYearAndMonth() {
+    void givenFindByYearAndMonth_whenExpenseIsFound_thenItShouldReturnOkAndAValidArrayResponse() throws Exception {
+        URI uri = new URI("/despesas/2021/2");
+
+        mockMvc.perform(MockMvcRequestBuilders
+                        .get(uri)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(content().json("""
+                        [
+                           	{
+                           		"id": 1,
+                           		"descricao": "ALUGUEL COTIA",
+                           		"valor": 2000.00,
+                           		"data": "2021-02-15",
+                           		"categoria": "Moradia"
+                           	},
+                           	{
+                           		"id": 2,
+                           		"descricao": "POSTO COMBUSTIVEL",
+                           		"valor": 180.00,
+                           		"data": "2021-02-03",
+                           		"categoria": "Transporte"
+                           	},
+                           	{
+                           		"id": 3,
+                           		"descricao": "ALURA",
+                           		"valor": 1400.00,
+                           		"data": "2021-02-19",
+                           		"categoria": "Educação"
+                           	},
+                           	{
+                           		"id": 4,
+                           		"descricao": "HAPPY HOUR",
+                           		"valor": 120.00,
+                           		"data": "2021-02-19",
+                           		"categoria": "Lazer"
+                           	}
+                           ]"""));
+    }
+
+    @Test
+    void givenFindByYearAndMonth_whenExpenseIsNotFound_thenItShouldReturnOkAndNoResponse() throws Exception {
+        URI uri = new URI("/despesas/2021/12");
+
+        mockMvc.perform(MockMvcRequestBuilders
+                        .get(uri)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(content().json("[]"));
     }
 
     @Test
