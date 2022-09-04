@@ -283,7 +283,83 @@ class DespesaControllerTest {
     }
 
     @Test
-    void update() {
+    void givenUpdate_whenExpenseIsFound_thenItShouldReturnOkAndAValidResponse() throws Exception {
+        CategoriaId food = new CategoriaId("Alimentação", CategoriaType.DESPESA);
+        Categoria categoria = new Categoria(food);
+        Despesa despesaToDelete = new Despesa(null, "TO DELETE", BigDecimal.TEN, LocalDate.now(), categoria);
+        despesaToDelete = despesaRepository.save(despesaToDelete);
+
+        URI uri = new URI("/despesas/" + despesaToDelete.getId());
+
+        mockMvc.perform(MockMvcRequestBuilders
+                        .put(uri)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                            {
+                              "descricao": "Premio UPDATE",
+                              "valor": 10000,
+                              "data": "2021-08-21"
+                            }
+                        """))
+                .andExpect(status().isOk())
+                .andExpect(content().json("""
+                        {
+                         	"descricao": "Premio UPDATE",
+                            "valor": 10000,
+                            "data": "2021-08-21",
+                         	"categoria": "Alimentação"
+                         }"""));
+
+        despesaRepository.deleteById(despesaToDelete.getId());
+    }
+
+    @Test
+    void givenUpdate_whenExpenseIsFoundAndDuplicate_thenItShouldReturnBadRequestAndAValidErrorResponse() throws Exception {
+        CategoriaId food = new CategoriaId("Alimentação", CategoriaType.DESPESA);
+        Categoria categoria = new Categoria(food);
+        Despesa despesaToDelete = new Despesa(null, "TO DELETE", BigDecimal.TEN, LocalDate.of(2021, 8, 21), categoria);
+        despesaToDelete = despesaRepository.save(despesaToDelete);
+
+        URI uri = new URI("/despesas/" + despesaToDelete.getId());
+
+        mockMvc.perform(MockMvcRequestBuilders
+                        .put(uri)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                            {
+                              "descricao": "TO DELETE",
+                              "valor": 10000,
+                              "data": "2021-08-21"
+                            }
+                        """))
+                .andExpect(status().isBadRequest())
+                .andExpect(content().json("""
+                        [
+                            {
+                                "field": "descricao",
+                                "error": "Despesa duplicada no mesmo mês"
+                            }
+                        ]"""));
+
+        despesaRepository.deleteById(despesaToDelete.getId());
+    }
+
+    @Test
+    void givenUpdate_whenExpenseIsNotFoundAndDuplicate_thenItShouldReturnNotFoundAndAEmptyResponse() throws Exception {
+        URI uri = new URI("/despesas/-1");
+
+        mockMvc.perform(MockMvcRequestBuilders
+                        .put(uri)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                            {
+                              "descricao": "TO DELETE",
+                              "valor": 10000,
+                              "data": "2021-08-21"
+                            }
+                        """))
+                .andExpect(status().isNotFound())
+                .andExpect(content().string(""));
     }
 
     @Test
