@@ -1,8 +1,7 @@
 package br.com.alexmdo.controleorcamentofamiliar.controller;
 
-import br.com.alexmdo.controleorcamentofamiliar.model.*;
+import br.com.alexmdo.controleorcamentofamiliar.model.Receita;
 import br.com.alexmdo.controleorcamentofamiliar.repository.ReceitaRepository;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,8 +15,9 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import java.math.BigDecimal;
 import java.net.URI;
 import java.time.LocalDate;
+import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -310,6 +310,29 @@ class ReceitaControllerTest {
     }
 
     @Test
-    void delete() {
+    void givenDelete_whenIncomeIsFound_thenItShouldReturnOkAndEmptyResponse() throws Exception {
+        Receita receitaToDelete = receitaRepository.save(new Receita(null, "RECEITA 1", new BigDecimal("1000.00"), LocalDate.of(2021, 8, 15)));
+
+        URI uri = new URI("/receitas/" + receitaToDelete.getId());
+
+        mockMvc.perform(MockMvcRequestBuilders
+                        .delete(uri)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(content().string(""));
+
+        Optional<Receita> optionalDespesa = receitaRepository.findById(receitaToDelete.getId());
+        assertFalse(optionalDespesa.isPresent());
+    }
+
+    @Test
+    void givenDelete_whenIncomeIsNotFound_thenItShouldReturnNotFoundAndEmptyResponse() throws Exception {
+        URI uri = new URI("/receitas/-1");
+
+        mockMvc.perform(MockMvcRequestBuilders
+                        .delete(uri)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound())
+                .andExpect(content().string(""));
     }
 }
