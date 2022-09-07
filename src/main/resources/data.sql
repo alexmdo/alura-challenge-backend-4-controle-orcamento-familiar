@@ -16,3 +16,5 @@ INSERT INTO despesas(descricao, valor, data, categoria_descricao, categoria_cate
 INSERT INTO despesas(descricao, valor, data, categoria_descricao, categoria_categoria_type) VALUES ('POSTO COMBUSTIVEL', 180, '2021-02-03', 'Transporte', 'DESPESA' );
 INSERT INTO despesas(descricao, valor, data, categoria_descricao, categoria_categoria_type) VALUES ('ALURA', 1400.00, '2021-02-19', 'Educação', 'DESPESA' );
 INSERT INTO despesas(descricao, valor, data, categoria_descricao, categoria_categoria_type) VALUES ('HAPPY HOUR', 120.00, '2021-02-19', 'Lazer', 'DESPESA' );
+
+INSERT INTO usuarios(email, nome, senha) VALUES ('alexmdo@gmail.com', 'Alexandre Oliveira', '$2a$10$4xZW8N6a9VFwacpiL6l1teMC8rBAOSv45J7w/8QvXJZzyf0grA4qG');
