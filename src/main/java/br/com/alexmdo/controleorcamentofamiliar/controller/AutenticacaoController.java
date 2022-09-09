@@ -17,7 +17,7 @@ import javax.validation.Valid;
 
 @RestController
 @RequestMapping("/auth")
-@Profile(value = {"prod", "dev", "default"})
+@Profile(value = {"prod", "dev", "default", "docker"})
 public class AutenticacaoController {
 
     private final AuthenticationManager authenticationManager;
