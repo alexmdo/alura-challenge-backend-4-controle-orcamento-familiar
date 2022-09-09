@@ -22,7 +22,7 @@ public class DespesaDTO {
         this.descricao = despesa.getDescricao();
         this.valor = despesa.getValor();
         this.data = despesa.getData();
-        this.categoria = despesa.getCategoria().getId().getDescricao();
+        this.categoria = despesa.getCategoria() != null && despesa.getCategoria().getId() != null ? despesa.getCategoria().getId().getDescricao() : null;
     }
 
     public static List<DespesaDTO> converter(List<Despesa> receitas) {

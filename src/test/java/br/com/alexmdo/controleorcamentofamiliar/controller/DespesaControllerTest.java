@@ -1,13 +1,11 @@
 package br.com.alexmdo.controleorcamentofamiliar.controller;
 
-import br.com.alexmdo.controleorcamentofamiliar.model.Categoria;
-import br.com.alexmdo.controleorcamentofamiliar.model.CategoriaId;
-import br.com.alexmdo.controleorcamentofamiliar.model.CategoriaType;
-import br.com.alexmdo.controleorcamentofamiliar.model.Despesa;
+import br.com.alexmdo.controleorcamentofamiliar.model.*;
+import br.com.alexmdo.controleorcamentofamiliar.repository.CategoriaRepository;
 import br.com.alexmdo.controleorcamentofamiliar.repository.DespesaRepository;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
@@ -36,6 +34,30 @@ class DespesaControllerTest {
 
     @Autowired
     DespesaRepository despesaRepository;
+
+    @Autowired
+    CategoriaRepository categoriaRepository;
+
+    @BeforeEach
+    void setUp() {
+        despesaRepository.deleteAll();
+        categoriaRepository.deleteAll();
+
+        Categoria categoriaAlimentacao = categoriaRepository.save(new Categoria(new CategoriaId("Alimentação", CategoriaType.DESPESA)));
+        Categoria categoriaSaude = categoriaRepository.save(new Categoria(new CategoriaId("Saúde", CategoriaType.DESPESA)));
+        Categoria categoriaMoradia = categoriaRepository.save(new Categoria(new CategoriaId("Moradia", CategoriaType.DESPESA)));
+        Categoria categoriaTransporte = categoriaRepository.save(new Categoria(new CategoriaId("Transporte", CategoriaType.DESPESA)));
+        Categoria categoriaOutras = categoriaRepository.save(new Categoria(new CategoriaId("Outras", CategoriaType.DESPESA)));
+
+        despesaRepository.save(new Despesa(null, "DESPESA ALIMENTAÇÃO 1", new BigDecimal("1000.00"), LocalDate.of(2021, 8, 1), categoriaAlimentacao));
+        despesaRepository.save(new Despesa(null, "DESPESA ALIMENTAÇÃO 2", new BigDecimal("2000.00"), LocalDate.of(2021, 8, 5), categoriaAlimentacao));
+        despesaRepository.save(new Despesa(null, "DESPESA SAÚDE 3", new BigDecimal("3000.00"), LocalDate.of(2021, 8, 10), categoriaSaude));
+        despesaRepository.save(new Despesa(null, "DESPESA SAÚDE 4", new BigDecimal("4000.00"), LocalDate.of(2021, 8, 15), categoriaSaude));
+        despesaRepository.save(new Despesa(null, "DESPESA MORADIA 5", new BigDecimal("5000.00"), LocalDate.of(2021, 8, 20), categoriaMoradia));
+        despesaRepository.save(new Despesa(null, "DESPESA MORADIA 6", new BigDecimal("6000.00"), LocalDate.of(2021, 8, 25), categoriaMoradia));
+        despesaRepository.save(new Despesa(null, "DESPESA TRANSPORTE 7", new BigDecimal("7000.00"), LocalDate.of(2021, 8, 30), categoriaTransporte));
+        despesaRepository.save(new Despesa(null, "DESPESA TRANSPORTE 8", new BigDecimal("8000.00"), LocalDate.of(2021, 9, 1), categoriaTransporte));
+    }
 
     @Test
     void givenSave_whenProvidedAValidRequest_thenItWhouldReturn201() throws Exception {
@@ -125,7 +147,7 @@ class DespesaControllerTest {
 
     @Test
     void givenFindByDescriptionOrAll_whenExpenseIsFound_thenItShouldReturnOkAndAValidArrayResponse() throws Exception {
-        URI uri = new URI("/despesas?descricao=ALU");
+        URI uri = new URI("/despesas?descricao=MORA");
 
         mockMvc.perform(MockMvcRequestBuilders
                         .get(uri)
@@ -134,18 +156,16 @@ class DespesaControllerTest {
                 .andExpect(content().json("""
                         [
                           	{
-                          		"id": 1,
-                          		"descricao": "ALUGUEL COTIA",
-                          		"valor": 2000.00,
-                          		"data": "2021-02-15",
+                          		"descricao": "DESPESA MORADIA 5",
+                          		"valor": 5000.00,
+                          		"data": "2021-08-20",
                           		"categoria": "Moradia"
                           	},
                           	{
-                          		"id": 3,
-                          		"descricao": "ALURA",
-                          		"valor": 1400.00,
-                          		"data": "2021-02-19",
-                          		"categoria": "Educação"
+                          		"descricao": "DESPESA MORADIA 6",
+                          		"valor": 6000.00,
+                          		"data": "2021-08-25",
+                          		"categoria": "Moradia"
                           	}
                           ]"""));
     }
@@ -171,40 +191,63 @@ class DespesaControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(content().json("""
                         [
-                           	{
-                           		"id": 1,
-                           		"descricao": "ALUGUEL COTIA",
-                           		"valor": 2000.00,
-                           		"data": "2021-02-15",
-                           		"categoria": "Moradia"
-                           	},
-                           	{
-                           		"id": 2,
-                           		"descricao": "POSTO COMBUSTIVEL",
-                           		"valor": 180.00,
-                           		"data": "2021-02-03",
-                           		"categoria": "Transporte"
-                           	},
-                           	{
-                           		"id": 3,
-                           		"descricao": "ALURA",
-                           		"valor": 1400.00,
-                           		"data": "2021-02-19",
-                           		"categoria": "Educação"
-                           	},
-                           	{
-                           		"id": 4,
-                           		"descricao": "HAPPY HOUR",
-                           		"valor": 120.00,
-                           		"data": "2021-02-19",
-                           		"categoria": "Lazer"
-                           	}
-                           ]"""));
+                            {
+                              "descricao": "DESPESA ALIMENTAÇÃO 1",
+                              "valor": 1000.0,
+                              "data": "2021-08-01",
+                              "categoria": "Alimentação"
+                            },
+                            {
+                              "descricao": "DESPESA ALIMENTAÇÃO 2",
+                              "valor": 2000.0,
+                              "data": "2021-08-05",
+                              "categoria": "Alimentação"
+                            },
+                            {
+                              "descricao": "DESPESA SAÚDE 3",
+                              "valor": 3000.0,
+                              "data": "2021-08-10",
+                              "categoria": "Saúde"
+                            },
+                            {
+                              "descricao": "DESPESA SAÚDE 4",
+                              "valor": 4000.0,
+                              "data": "2021-08-15",
+                              "categoria": "Saúde"
+                            },
+                            {
+                              "descricao": "DESPESA MORADIA 5",
+                              "valor": 5000.0,
+                              "data": "2021-08-20",
+                              "categoria": "Moradia"
+                            },
+                            {
+                              "descricao": "DESPESA MORADIA 6",
+                              "valor": 6000.0,
+                              "data": "2021-08-25",
+                              "categoria": "Moradia"
+                            },
+                            {
+                              "descricao": "DESPESA TRANSPORTE 7",
+                              "valor": 7000.0,
+                              "data": "2021-08-30",
+                              "categoria": "Transporte"
+                            },
+                            {
+                              "descricao": "DESPESA TRANSPORTE 8",
+                              "valor": 8000.0,
+                              "data": "2021-09-01",
+                              "categoria": "Transporte"
+                            }
+                          ]
+                        """));
     }
 
     @Test
     void givenGetDetail_whenExpenseIsFound_thenItShouldReturnOkAndValidResponse() throws Exception {
-        URI uri = new URI("/despesas/1");
+        Despesa despesa = despesaRepository.save(new Despesa(null, "DESPESA TO BE FOUND", new BigDecimal("2000.00"), LocalDate.of(2022, 2, 15), new Categoria(new CategoriaId("Outras", CategoriaType.DESPESA))));
+
+        URI uri = new URI("/despesas/" + despesa.getId());
 
         mockMvc.perform(MockMvcRequestBuilders
                         .get(uri)
@@ -212,11 +255,10 @@ class DespesaControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(content().json("""
                         {
-                         	"id": 1,
-                         	"descricao": "ALUGUEL COTIA",
+                         	"descricao": "DESPESA TO BE FOUND",
                          	"valor": 2000.00,
-                         	"data": "2021-02-15",
-                         	"categoria": "Moradia"
+                         	"data": "2022-02-15",
+                         	"categoria": "Outras"
                          }"""));
     }
 
@@ -233,7 +275,7 @@ class DespesaControllerTest {
 
     @Test
     void givenFindByYearAndMonth_whenExpenseIsFound_thenItShouldReturnOkAndAValidArrayResponse() throws Exception {
-        URI uri = new URI("/despesas/2021/2");
+        URI uri = new URI("/despesas/2021/8");
 
         mockMvc.perform(MockMvcRequestBuilders
                         .get(uri)
@@ -241,35 +283,50 @@ class DespesaControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(content().json("""
                         [
-                           	{
-                           		"id": 1,
-                           		"descricao": "ALUGUEL COTIA",
-                           		"valor": 2000.00,
-                           		"data": "2021-02-15",
-                           		"categoria": "Moradia"
-                           	},
-                           	{
-                           		"id": 2,
-                           		"descricao": "POSTO COMBUSTIVEL",
-                           		"valor": 180.00,
-                           		"data": "2021-02-03",
-                           		"categoria": "Transporte"
-                           	},
-                           	{
-                           		"id": 3,
-                           		"descricao": "ALURA",
-                           		"valor": 1400.00,
-                           		"data": "2021-02-19",
-                           		"categoria": "Educação"
-                           	},
-                           	{
-                           		"id": 4,
-                           		"descricao": "HAPPY HOUR",
-                           		"valor": 120.00,
-                           		"data": "2021-02-19",
-                           		"categoria": "Lazer"
-                           	}
-                           ]"""));
+                          {
+                            "descricao": "DESPESA ALIMENTAÇÃO 1",
+                            "valor": 1000.0,
+                            "data": "2021-08-01",
+                            "categoria": "Alimentação"
+                          },
+                          {
+                            "descricao": "DESPESA ALIMENTAÇÃO 2",
+                            "valor": 2000.0,
+                            "data": "2021-08-05",
+                            "categoria": "Alimentação"
+                          },
+                          {
+                            "descricao": "DESPESA SAÚDE 3",
+                            "valor": 3000.0,
+                            "data": "2021-08-10",
+                            "categoria": "Saúde"
+                          },
+                          {
+                            "descricao": "DESPESA SAÚDE 4",
+                            "valor": 4000.0,
+                            "data": "2021-08-15",
+                            "categoria": "Saúde"
+                          },
+                          {
+                            "descricao": "DESPESA MORADIA 5",
+                            "valor": 5000.0,
+                            "data": "2021-08-20",
+                            "categoria": "Moradia"
+                          },
+                          {
+                            "descricao": "DESPESA MORADIA 6",
+                            "valor": 6000.0,
+                            "data": "2021-08-25",
+                            "categoria": "Moradia"
+                          },
+                          {
+                            "descricao": "DESPESA TRANSPORTE 7",
+                            "valor": 7000.0,
+                            "data": "2021-08-30",
+                            "categoria": "Transporte"
+                          }
+                        ]
+                        """));
     }
 
     @Test
