@@ -1,0 +1,30 @@
+_id: req_1eb498528d014c23bdb3df418106cd40
+type: Request
+parentId: fld_7e45489267d84b3f8f57997898a047be
+modified: 1662833181544
+created: 1662592111410
+url: http://localhost:8080/auth
+name: /auth
+description: ""
+method: POST
+body:
+  mimeType: application/json
+  text: |-
+    {
+    	"email": "alexmdo@gmail.com",
+    	"password": "123456"
+    }
+parameters: []
+headers:
+  - name: Content-Type
+    value: application/json
+    id: pair_64756d91533f49118de199df8dc8e339
+authentication: {}
+metaSortKey: -1662592111410
+isPrivate: false
+settingStoreCookies: true
+settingSendCookies: true
+settingDisableRenderRequestBody: false
+settingEncodeUrl: true
+settingRebuildPath: true
+settingFollowRedirects: global
