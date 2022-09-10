@@ -6,6 +6,7 @@ import br.com.alexmdo.controleorcamentofamiliar.model.CategoryId;
 import br.com.alexmdo.controleorcamentofamiliar.model.CategoryType;
 import br.com.alexmdo.controleorcamentofamiliar.model.Expense;
 import br.com.alexmdo.controleorcamentofamiliar.repository.ExpenseRepository;
+import br.com.alexmdo.controleorcamentofamiliar.service.ExpenseService;
 import lombok.Data;
 import org.hibernate.validator.constraints.Length;
 
@@ -35,12 +36,12 @@ public class ExpenseForm {
         return new Expense(null, getDescription(), getAmount(), getDate(), new Category(new CategoryId(category, CategoryType.EXPENSE)));
     }
 
-    public Expense update(long id, ExpenseForm form, ExpenseRepository expenseRepository) {
-        Optional<Expense> despesaOptional = expenseRepository.findById(id);
+    public Expense update(long id, ExpenseForm form, ExpenseService expenseService) {
+        Optional<Expense> despesaOptional = expenseService.findById(id);
         if (despesaOptional.isPresent()) {
             Expense expense = despesaOptional.get();
 
-            List<Expense> expenses = expenseRepository.findByYearMonthAndDescription(form.getDate().getYear(), form.getDate().getMonthValue(), form.getDescription());
+            List<Expense> expenses = expenseService.findByYearMonthAndDescription(form.getDate().getYear(), form.getDate().getMonthValue(), form.getDescription());
             if (!expenses.isEmpty()) {
                 throw new IncomeDuplicateException("Duplicated expense in the same month");
             }
@@ -55,14 +56,14 @@ public class ExpenseForm {
         return null;
     }
 
-    public Expense save(ExpenseRepository expenseRepository) {
+    public Expense save(ExpenseService expenseService) {
         Expense expense = this.converter();
 
-        List<Expense> expenses = expenseRepository.findByYearMonthAndDescription(expense.getDate().getYear(), expense.getDate().getMonthValue(), expense.getDescription());
+        List<Expense> expenses = expenseService.findByYearMonthAndDescription(expense.getDate().getYear(), expense.getDate().getMonthValue(), expense.getDescription());
         if (!expenses.isEmpty()) {
             throw new IncomeDuplicateException("Duplicated expense in the same month");
         }
 
-        return expenseRepository.save(expense);
+        return expenseService.save(expense);
     }
 }

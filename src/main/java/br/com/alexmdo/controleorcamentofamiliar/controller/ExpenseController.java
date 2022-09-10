@@ -3,7 +3,7 @@ package br.com.alexmdo.controleorcamentofamiliar.controller;
 import br.com.alexmdo.controleorcamentofamiliar.controller.dto.ExpenseDTO;
 import br.com.alexmdo.controleorcamentofamiliar.controller.form.ExpenseForm;
 import br.com.alexmdo.controleorcamentofamiliar.model.Expense;
-import br.com.alexmdo.controleorcamentofamiliar.repository.ExpenseRepository;
+import br.com.alexmdo.controleorcamentofamiliar.service.ExpenseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,17 +19,17 @@ import java.util.Optional;
 @RequestMapping("/expenses")
 public class ExpenseController {
 
-    private final ExpenseRepository expenseRepository;
+    private final ExpenseService expenseService;
 
     @Autowired
-    public ExpenseController(ExpenseRepository expenseRepository) {
-        this.expenseRepository = expenseRepository;
+    public ExpenseController(ExpenseService expenseService) {
+        this.expenseService = expenseService;
     }
 
     @PostMapping()
     @Transactional
     public ResponseEntity<ExpenseDTO> save(@RequestBody @Valid final ExpenseForm form, final UriComponentsBuilder uriBuilder) {
-        Expense expense = form.save(expenseRepository);
+        Expense expense = form.save(expenseService);
         URI uri = uriBuilder.path("/expenses/{id}").buildAndExpand(expense.getId()).toUri();
         return ResponseEntity.created(uri).body(new ExpenseDTO(expense));
     }
@@ -37,29 +37,29 @@ public class ExpenseController {
     @GetMapping()
     public List<ExpenseDTO> findByDescriptionOrAll(@RequestParam(required = false) String descricao) {
         if (descricao == null || descricao.isBlank()) {
-            return ExpenseDTO.converter(expenseRepository.findAll());
+            return ExpenseDTO.converter(expenseService.findAll());
         } else {
-            return ExpenseDTO.converter(expenseRepository.findByDescriptionContaining(descricao));
+            return ExpenseDTO.converter(expenseService.findByDescriptionContaining(descricao));
         }
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<ExpenseDTO> getDetail(@PathVariable final Long id) {
-        Optional<Expense> despesaOptional = expenseRepository.findById(id);
+        Optional<Expense> despesaOptional = expenseService.findById(id);
         return despesaOptional.map(despesa -> ResponseEntity.ok(new ExpenseDTO(despesa))).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @GetMapping("/{year}/{month}")
     public List<ExpenseDTO> findByYearAndMonth(@PathVariable final Integer year, @PathVariable final Integer month) {
-        return ExpenseDTO.converter(expenseRepository.findByYearAndMonth(year, month));
+        return ExpenseDTO.converter(expenseService.findByYearAndMonth(year, month));
     }
 
     @PutMapping("/{id}")
     @Transactional
     public ResponseEntity<ExpenseDTO> update(@PathVariable final Long id, @RequestBody @Valid final ExpenseForm form) {
-        Optional<Expense> despesaOptional = expenseRepository.findById(id);
+        Optional<Expense> despesaOptional = expenseService.findById(id);
         if (despesaOptional.isPresent()) {
-            Expense expense = form.update(id, form, expenseRepository);
+            Expense expense = form.update(id, form, expenseService);
             return ResponseEntity.ok(new ExpenseDTO(expense));
         }
 
@@ -69,9 +69,9 @@ public class ExpenseController {
     @DeleteMapping("/{id}")
     @Transactional
     public ResponseEntity<ExpenseDTO> delete(@PathVariable final Long id) {
-        Optional<Expense> despesaOptional = expenseRepository.findById(id);
+        Optional<Expense> despesaOptional = expenseService.findById(id);
         if (despesaOptional.isPresent()) {
-            expenseRepository.deleteById(id);
+            expenseService.deleteById(id);
             return ResponseEntity.ok().build();
         }
 

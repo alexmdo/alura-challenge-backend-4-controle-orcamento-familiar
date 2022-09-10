@@ -105,7 +105,7 @@ class IncomeControllerTest {
 
     @Test
     void givenFindByDescriptionOrAll_whenIncomeIsFound_thenItShouldReturnOkAndAValidArrayResponse() throws Exception {
-        URI uri = new URI("/incomes?descricao=RECEITA%203");
+        URI uri = new URI("/incomes?description=RECEITA%203");
 
         mockMvc.perform(MockMvcRequestBuilders
                         .get(uri)
@@ -124,7 +124,7 @@ class IncomeControllerTest {
 
     @Test
     void givenFindByDescriptionOrAll_whenIncomeIsNotFound_thenItShouldReturnOkAndEmptyArrayResponse() throws Exception {
-        URI uri = new URI("/incomes?descricao=XPTO");
+        URI uri = new URI("/incomes?description=XPTO");
 
         mockMvc.perform(MockMvcRequestBuilders
                         .get(uri)
@@ -135,7 +135,7 @@ class IncomeControllerTest {
 
     @Test
     void givenFindByDescriptionOrAll_whenDescricaoRequestParamIsBlank_thenItShouldReturnOkAndAValidArrayResponse() throws Exception {
-        URI uri = new URI("/incomes?descricao=");
+        URI uri = new URI("/incomes?description=");
 
         mockMvc.perform(MockMvcRequestBuilders
                         .get(uri)

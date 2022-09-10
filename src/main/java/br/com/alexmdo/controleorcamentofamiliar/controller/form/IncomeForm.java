@@ -3,6 +3,7 @@ package br.com.alexmdo.controleorcamentofamiliar.controller.form;
 import br.com.alexmdo.controleorcamentofamiliar.exception.IncomeDuplicateException;
 import br.com.alexmdo.controleorcamentofamiliar.model.Income;
 import br.com.alexmdo.controleorcamentofamiliar.repository.IncomeRepository;
+import br.com.alexmdo.controleorcamentofamiliar.service.IncomeService;
 import lombok.Data;
 import org.hibernate.validator.constraints.Length;
 
@@ -27,12 +28,12 @@ public class IncomeForm {
         return new Income(null, getDescription(), getAmount(), getDate());
     }
 
-    public Income atualizar(long id, IncomeForm form, IncomeRepository incomeRepository) {
-        Optional<Income> receitaOptional = incomeRepository.findById(id);
+    public Income atualizar(long id, IncomeForm form, IncomeService incomeService) {
+        Optional<Income> receitaOptional = incomeService.findById(id);
         if (receitaOptional.isPresent()) {
             Income income = receitaOptional.get();
 
-            List<Income> incomes = incomeRepository.findByYearMonthAndDescription(form.getDate().getYear(), form.getDate().getMonthValue(), form.getDescription());
+            List<Income> incomes = incomeService.findByYearMonthAndDescription(form.getDate().getYear(), form.getDate().getMonthValue(), form.getDescription());
             if (!incomes.isEmpty()) {
                 throw new IncomeDuplicateException("Duplicate income in the same month");
             }
