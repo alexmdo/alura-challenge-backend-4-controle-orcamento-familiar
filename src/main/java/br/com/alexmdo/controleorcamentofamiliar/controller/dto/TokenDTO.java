@@ -6,6 +6,6 @@ import lombok.Data;
 public class TokenDTO {
 
     private final String token;
-    private final String tipo;
+    private final String type;
 
 }

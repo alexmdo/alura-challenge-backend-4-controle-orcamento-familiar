@@ -7,31 +7,31 @@ import javax.persistence.*;
 import java.util.Objects;
 
 @Entity
-@Table(name = "perfis")
+@Table(name = "profiles")
 @ToString
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class Perfil implements GrantedAuthority {
+public class Profile implements GrantedAuthority {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String nome;
+    private String name;
 
     @Override
     public String getAuthority() {
-        return nome;
+        return name;
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Perfil perfil = (Perfil) o;
-        return id.equals(perfil.id);
+        Profile profile = (Profile) o;
+        return id.equals(profile.id);
     }
 
     @Override

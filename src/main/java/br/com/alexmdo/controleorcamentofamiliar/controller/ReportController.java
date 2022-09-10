@@ -2,8 +2,8 @@ package br.com.alexmdo.controleorcamentofamiliar.controller;
 
 import br.com.alexmdo.controleorcamentofamiliar.model.dto.ExpenseByCategoryDTO;
 import br.com.alexmdo.controleorcamentofamiliar.model.dto.SummaryOfTheMonthDTO;
-import br.com.alexmdo.controleorcamentofamiliar.repository.DespesaRepository;
-import br.com.alexmdo.controleorcamentofamiliar.repository.ReceitaRepository;
+import br.com.alexmdo.controleorcamentofamiliar.repository.ExpenseRepository;
+import br.com.alexmdo.controleorcamentofamiliar.repository.IncomeRepository;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -13,23 +13,23 @@ import java.math.BigDecimal;
 import java.util.List;
 
 @RestController
-@RequestMapping("/resumo")
-public class RelatorioController {
+@RequestMapping("/summary")
+public class ReportController {
 
-    private final DespesaRepository despesaRepository;
-    private final ReceitaRepository receitaRepository;
+    private final ExpenseRepository expenseRepository;
+    private final IncomeRepository incomeRepository;
 
-    public RelatorioController(DespesaRepository despesaRepository, ReceitaRepository receitaRepository) {
-        this.despesaRepository = despesaRepository;
-        this.receitaRepository = receitaRepository;
+    public ReportController(ExpenseRepository expenseRepository, IncomeRepository incomeRepository) {
+        this.expenseRepository = expenseRepository;
+        this.incomeRepository = incomeRepository;
     }
 
     @GetMapping("/{year}/{month}")
     public SummaryOfTheMonthDTO generateSummaryOfTheMonth(@PathVariable Integer year, @PathVariable Integer month) {
-        BigDecimal sumExpensesByYearAndMonth = despesaRepository.getSumExpensesByYearAndMonth(year, month);
-        BigDecimal sumIncomesByYearAndMonth = receitaRepository.getSumIncomesByYearAndMonth(year, month);
+        BigDecimal sumExpensesByYearAndMonth = expenseRepository.getSumExpensesByYearAndMonth(year, month);
+        BigDecimal sumIncomesByYearAndMonth = incomeRepository.getSumIncomesByYearAndMonth(year, month);
         BigDecimal balance = sumIncomesByYearAndMonth.subtract(sumExpensesByYearAndMonth);
-        List<ExpenseByCategoryDTO> totalExpenseByCategory = despesaRepository.getTotalExpenseByCategory(year, month);
+        List<ExpenseByCategoryDTO> totalExpenseByCategory = expenseRepository.getTotalExpenseByCategory(year, month);
 
         return new SummaryOfTheMonthDTO(sumIncomesByYearAndMonth, sumExpensesByYearAndMonth, balance, totalExpenseByCategory);
     }

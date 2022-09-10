@@ -1,7 +1,7 @@
 package br.com.alexmdo.controleorcamentofamiliar.security;
 
-import br.com.alexmdo.controleorcamentofamiliar.model.Usuario;
-import br.com.alexmdo.controleorcamentofamiliar.repository.UsuarioRepository;
+import br.com.alexmdo.controleorcamentofamiliar.model.User;
+import br.com.alexmdo.controleorcamentofamiliar.repository.UserRepository;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -14,14 +14,14 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-public class AutenticacaoViaTokenFilter extends OncePerRequestFilter {
+public class AuthenticationByTokenFilter extends OncePerRequestFilter {
 
     private final TokenService tokenService;
-    private final UsuarioRepository usuarioRepository;
+    private final UserRepository userRepository;
 
-    public AutenticacaoViaTokenFilter(TokenService tokenService, UsuarioRepository usuarioRepository) {
+    public AuthenticationByTokenFilter(TokenService tokenService, UserRepository userRepository) {
         this.tokenService = tokenService;
-        this.usuarioRepository = usuarioRepository;
+        this.userRepository = userRepository;
     }
 
     @Override
@@ -36,7 +36,7 @@ public class AutenticacaoViaTokenFilter extends OncePerRequestFilter {
 
     private void autenticarUsuario(String token) {
         Long principal = tokenService.getIdUsuario(token);
-        Usuario credentials = usuarioRepository.findById(principal).orElseThrow(() -> new UsernameNotFoundException("Usuário não encontrado!"));
+        User credentials = userRepository.findById(principal).orElseThrow(() -> new UsernameNotFoundException("Usuário não encontrado!"));
 
         Authentication authentication = new UsernamePasswordAuthenticationToken(principal, credentials, credentials.getAuthorities());
         SecurityContextHolder.getContext().setAuthentication(authentication);

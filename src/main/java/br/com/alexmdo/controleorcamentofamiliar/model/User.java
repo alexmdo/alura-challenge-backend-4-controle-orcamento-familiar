@@ -11,33 +11,33 @@ import java.util.List;
 import java.util.Objects;
 
 @Entity
-@Table(name = "usuarios")
+@Table(name = "users")
 @ToString
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class Usuario implements UserDetails {
+public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String nome;
+    private String name;
     private String email;
-    private String senha;
+    private String password;
     @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(name = "usuarios_perfis",
-            joinColumns = @JoinColumn(name = "usuario_id", referencedColumnName = "id"))
-    private List<Perfil> perfis = new ArrayList<>();
+    @JoinTable(name = "users_profiles",
+            joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"))
+    private List<Profile> profiles = new ArrayList<>();
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return perfis;
+        return profiles;
     }
 
     @Override
     public String getPassword() {
-        return this.senha;
+        return this.password;
     }
 
     @Override
@@ -69,8 +69,8 @@ public class Usuario implements UserDetails {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Usuario usuario = (Usuario) o;
-        return id.equals(usuario.id);
+        User user = (User) o;
+        return id.equals(user.id);
     }
 
     @Override

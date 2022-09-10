@@ -1,8 +1,8 @@
 package br.com.alexmdo.controleorcamentofamiliar.model;
 
-public enum CategoriaType {
+public enum CategoryType {
 
-    DESPESA,
-    RECEITA
+    EXPENSE,
+    INCOME
 
 }

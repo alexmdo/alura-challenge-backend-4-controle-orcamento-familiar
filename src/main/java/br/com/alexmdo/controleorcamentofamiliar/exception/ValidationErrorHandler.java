@@ -40,7 +40,7 @@ public class ValidationErrorHandler {
     @ResponseStatus(code = HttpStatus.BAD_REQUEST)
     @ExceptionHandler(IncomeDuplicateException.class)
     public List<FormErrorDTO> handle(IncomeDuplicateException exception) {
-        return List.of(new FormErrorDTO("descricao", exception.getMessage()));
+        return List.of(new FormErrorDTO("description", exception.getMessage()));
     }
 
 }

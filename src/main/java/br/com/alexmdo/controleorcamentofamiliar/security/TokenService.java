@@ -1,6 +1,6 @@
 package br.com.alexmdo.controleorcamentofamiliar.security;
 
-import br.com.alexmdo.controleorcamentofamiliar.model.Usuario;
+import br.com.alexmdo.controleorcamentofamiliar.model.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -20,7 +20,7 @@ public class TokenService {
     private String secret;
 
     public String gerarToken(Authentication authenticate) {
-        Usuario principal = (Usuario) authenticate.getPrincipal();
+        User principal = (User) authenticate.getPrincipal();
         Date now = new Date();
         Date exp = new Date(now.getTime() + expirationInMillis);
         return Jwts.builder()

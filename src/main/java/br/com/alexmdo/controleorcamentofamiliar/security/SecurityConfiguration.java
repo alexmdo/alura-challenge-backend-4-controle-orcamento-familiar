@@ -1,6 +1,6 @@
 package br.com.alexmdo.controleorcamentofamiliar.security;
 
-import br.com.alexmdo.controleorcamentofamiliar.repository.UsuarioRepository;
+import br.com.alexmdo.controleorcamentofamiliar.repository.UserRepository;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
@@ -20,19 +20,19 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @Profile(value = {"prod", "dev", "default", "docker"})
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
-    private final AutenticacaoService autenticacaoService;
+    private final AuthenticationService authenticationService;
     private final TokenService tokenService;
-    private final UsuarioRepository usuarioRepository;
+    private final UserRepository userRepository;
 
-    public SecurityConfiguration(AutenticacaoService autenticacaoService, TokenService tokenService, UsuarioRepository usuarioRepository) {
-        this.autenticacaoService = autenticacaoService;
+    public SecurityConfiguration(AuthenticationService authenticationService, TokenService tokenService, UserRepository userRepository) {
+        this.authenticationService = authenticationService;
         this.tokenService = tokenService;
-        this.usuarioRepository = usuarioRepository;
+        this.userRepository = userRepository;
     }
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(autenticacaoService).passwordEncoder(new BCryptPasswordEncoder());
+        auth.userDetailsService(authenticationService).passwordEncoder(new BCryptPasswordEncoder());
     }
 
     @Override
@@ -43,7 +43,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .anyRequest().authenticated()
                 .and().csrf().disable()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                .and().addFilterBefore(new AutenticacaoViaTokenFilter(tokenService, usuarioRepository), UsernamePasswordAuthenticationFilter.class);
+                .and().addFilterBefore(new AuthenticationByTokenFilter(tokenService, userRepository), UsernamePasswordAuthenticationFilter.class);
     }
 
     @Override

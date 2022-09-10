@@ -16,26 +16,26 @@ import java.util.Objects;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class CategoriaId implements Serializable {
+public class CategoryId implements Serializable {
 
     @Serial
     private static final long serialVersionUID = 3140930925599382735L;
 
-    private String descricao;
+    private String description;
     @Enumerated(EnumType.STRING)
-    private CategoriaType categoriaType;
+    private CategoryType categoryType;
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
-        CategoriaId that = (CategoriaId) o;
-        return descricao != null && Objects.equals(descricao, that.descricao)
-                && categoriaType != null && Objects.equals(categoriaType, that.categoriaType);
+        CategoryId that = (CategoryId) o;
+        return description != null && Objects.equals(description, that.description)
+                && categoryType != null && Objects.equals(categoryType, that.categoryType);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(descricao, categoriaType);
+        return Objects.hash(description, categoryType);
     }
 }
