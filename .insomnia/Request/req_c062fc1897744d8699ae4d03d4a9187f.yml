@@ -1,16 +1,20 @@
 _id: req_c062fc1897744d8699ae4d03d4a9187f
 type: Request
 parentId: fld_e473390ac2ef4d5287b72519cf5a1baf
-modified: 1661727840331
+modified: 1662833198532
 created: 1661301146790
-url: http://localhost:8080/receitas
+url: http://localhost:8080/incomes
 name: /receitas
 description: ""
 method: GET
 body: {}
 parameters: []
 headers: []
-authentication: {}
+authentication:
+  type: bearer
+  token: "{% response 'body', 'req_1eb498528d014c23bdb3df418106cd40',
+    'b64::JC50b2tlbg==::46b', 'when-expired', 60 %}"
+  disabled: false
 metaSortKey: -1661301052472.5
 isPrivate: false
 settingStoreCookies: true

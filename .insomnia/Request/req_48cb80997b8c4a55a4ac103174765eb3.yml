@@ -1,16 +1,19 @@
 _id: req_48cb80997b8c4a55a4ac103174765eb3
 type: Request
 parentId: fld_1c0662940f5c49ff98820ca14b89d7ee
-modified: 1662325440715
+modified: 1662833183316
 created: 1662255966861
-url: http://localhost:8080/resumo/2021/2
+url: http://localhost:8080/summary/2021/2
 name: /resumo/{year}/{month}
 description: ""
 method: GET
 body: {}
 parameters: []
 headers: []
-authentication: {}
+authentication:
+  type: bearer
+  token: "{% response 'body', 'req_1eb498528d014c23bdb3df418106cd40',
+    'b64::JC50b2tlbg==::46b', 'when-expired', 60 %}"
 metaSortKey: -1662255966861
 isPrivate: false
 settingStoreCookies: true
