@@ -7,27 +7,13 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 
-@Data
-public class IncomeDTO {
-
-    private Long id;
-    private String description;
-    private BigDecimal amount;
-    private LocalDate date;
-
-    public IncomeDTO(Income income) {
-        this.id = income.getId();
-        this.description = income.getDescription();
-        this.amount = income.getAmount();
-        this.date = income.getDate();
-    }
+public record IncomeDTO(Long id, String description, BigDecimal amount, LocalDate date) {
 
     public static List<IncomeDTO> converter(List<Income> incomes) {
-        return incomes.stream().map(IncomeDTO::new).toList();
-    }
-
-    public Income converter() {
-        return new Income(getId(), getDescription(), getAmount(), getDate());
+        return incomes
+                .stream()
+                .map((income) -> new IncomeDTO(income.getId(), income.getDescription(), income.getAmount(), income.getDate()))
+                .toList();
     }
 
 }

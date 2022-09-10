@@ -40,7 +40,7 @@ public class IncomeController {
         income = incomeService.save(income);
 
         URI uri = uriBuilder.path("/incomes/{id}").buildAndExpand(income.getId()).toUri();
-        return ResponseEntity.created(uri).body(new IncomeDTO(income));
+        return ResponseEntity.created(uri).body(new IncomeDTO(income.getId(), income.getDescription(), income.getAmount(), income.getDate()));
     }
 
     @GetMapping()
@@ -60,7 +60,7 @@ public class IncomeController {
     @GetMapping("/{id}")
     public ResponseEntity<IncomeDTO> getDetail(@PathVariable final Long id) {
         Optional<Income> receitaOptional = incomeService.findById(id);
-        return receitaOptional.map(receita -> ResponseEntity.ok(new IncomeDTO(receita))).orElseGet(() -> ResponseEntity.notFound().build());
+        return receitaOptional.map(receita -> ResponseEntity.ok(new IncomeDTO(receita.getId(), receita.getDescription(), receita.getAmount(), receita.getDate()))).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @PutMapping("/{id}")
@@ -69,7 +69,7 @@ public class IncomeController {
         Optional<Income> receitaOptional = incomeService.findById(id);
         if (receitaOptional.isPresent()) {
             Income income = form.atualizar(id, form, incomeService);
-            return ResponseEntity.ok(new IncomeDTO(income));
+            return ResponseEntity.ok(new IncomeDTO(income.getId(), income.getDescription(), income.getAmount(), income.getDate()));
         }
 
         return ResponseEntity.notFound().build();

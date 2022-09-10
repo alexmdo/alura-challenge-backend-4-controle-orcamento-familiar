@@ -31,7 +31,7 @@ public class ExpenseController {
     public ResponseEntity<ExpenseDTO> save(@RequestBody @Valid final ExpenseForm form, final UriComponentsBuilder uriBuilder) {
         Expense expense = form.save(expenseService);
         URI uri = uriBuilder.path("/expenses/{id}").buildAndExpand(expense.getId()).toUri();
-        return ResponseEntity.created(uri).body(new ExpenseDTO(expense));
+        return ResponseEntity.created(uri).body(new ExpenseDTO(expense.getId(), expense.getDescription(), expense.getAmount(), expense.getDate(), expense.getCategory().getId().getDescription()));
     }
 
     @GetMapping()
@@ -46,7 +46,7 @@ public class ExpenseController {
     @GetMapping("/{id}")
     public ResponseEntity<ExpenseDTO> getDetail(@PathVariable final Long id) {
         Optional<Expense> despesaOptional = expenseService.findById(id);
-        return despesaOptional.map(despesa -> ResponseEntity.ok(new ExpenseDTO(despesa))).orElseGet(() -> ResponseEntity.notFound().build());
+        return despesaOptional.map(despesa -> ResponseEntity.ok(new ExpenseDTO(despesa.getId(), despesa.getDescription(), despesa.getAmount(), despesa.getDate(), despesa.getCategory().getId().getDescription()))).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @GetMapping("/{year}/{month}")
@@ -60,7 +60,7 @@ public class ExpenseController {
         Optional<Expense> despesaOptional = expenseService.findById(id);
         if (despesaOptional.isPresent()) {
             Expense expense = form.update(id, form, expenseService);
-            return ResponseEntity.ok(new ExpenseDTO(expense));
+            return ResponseEntity.ok(new ExpenseDTO(expense.getId(), expense.getDescription(), expense.getAmount(), expense.getDate(), expense.getCategory().getId().getDescription()));
         }
 
         return ResponseEntity.notFound().build();
