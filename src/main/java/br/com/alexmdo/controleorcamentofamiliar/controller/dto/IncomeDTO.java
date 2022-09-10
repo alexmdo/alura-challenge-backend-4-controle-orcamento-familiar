@@ -1,7 +1,6 @@
 package br.com.alexmdo.controleorcamentofamiliar.controller.dto;
 
 import br.com.alexmdo.controleorcamentofamiliar.model.Income;
-import lombok.Data;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;

@@ -7,7 +7,6 @@ import br.com.alexmdo.controleorcamentofamiliar.model.CategoryType;
 import br.com.alexmdo.controleorcamentofamiliar.model.Expense;
 import br.com.alexmdo.controleorcamentofamiliar.model.vo.ExpenseByCategoryVO;
 import br.com.alexmdo.controleorcamentofamiliar.repository.ExpenseRepository;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;

@@ -1,11 +1,9 @@
 package br.com.alexmdo.controleorcamentofamiliar.controller.form;
 
-import br.com.alexmdo.controleorcamentofamiliar.exception.IncomeDuplicateException;
 import br.com.alexmdo.controleorcamentofamiliar.model.Category;
 import br.com.alexmdo.controleorcamentofamiliar.model.CategoryId;
 import br.com.alexmdo.controleorcamentofamiliar.model.CategoryType;
 import br.com.alexmdo.controleorcamentofamiliar.model.Expense;
-import br.com.alexmdo.controleorcamentofamiliar.service.ExpenseService;
 import lombok.Data;
 import org.hibernate.validator.constraints.Length;
 
@@ -13,8 +11,6 @@ import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.List;
-import java.util.Optional;
 
 @Data
 public class ExpenseForm {
