@@ -2,15 +2,15 @@ package br.com.alexmdo.controleorcamentofamiliar.controller;
 
 import br.com.alexmdo.controleorcamentofamiliar.controller.dto.IncomeDTO;
 import br.com.alexmdo.controleorcamentofamiliar.controller.form.IncomeForm;
-import br.com.alexmdo.controleorcamentofamiliar.exception.IncomeDuplicateException;
 import br.com.alexmdo.controleorcamentofamiliar.model.Income;
 import br.com.alexmdo.controleorcamentofamiliar.service.IncomeService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import javax.transaction.Transactional;
+import javax.persistence.EntityNotFoundException;
 import javax.validation.Valid;
 import java.net.URI;
 import java.util.List;
@@ -28,17 +28,8 @@ public class IncomeController {
     }
 
     @PostMapping()
-    @Transactional
     public ResponseEntity<IncomeDTO> save(@RequestBody @Valid final IncomeForm form, final UriComponentsBuilder uriBuilder) {
-        Income income = form.converter();
-
-        List<Income> incomes = incomeService.findByYearMonthAndDescription(income.getDate().getYear(), income.getDate().getMonthValue(), income.getDescription());
-        if (!incomes.isEmpty()) {
-            throw new IncomeDuplicateException("Duplicated income in the same month");
-        }
-
-        income = incomeService.save(income);
-
+        Income income = incomeService.save(form.adapt());
         URI uri = uriBuilder.path("/incomes/{id}").buildAndExpand(income.getId()).toUri();
         return ResponseEntity.created(uri).body(new IncomeDTO(income.getId(), income.getDescription(), income.getAmount(), income.getDate()));
     }
@@ -64,27 +55,23 @@ public class IncomeController {
     }
 
     @PutMapping("/{id}")
-    @Transactional
     public ResponseEntity<IncomeDTO> update(@PathVariable final Long id, @RequestBody @Valid final IncomeForm form) {
-        Optional<Income> receitaOptional = incomeService.findById(id);
-        if (receitaOptional.isPresent()) {
-            Income income = form.atualizar(id, form, incomeService);
+        try {
+            Income income = incomeService.update(id, form.adapt());
             return ResponseEntity.ok(new IncomeDTO(income.getId(), income.getDescription(), income.getAmount(), income.getDate()));
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.notFound().build();
         }
-
-        return ResponseEntity.notFound().build();
     }
 
     @DeleteMapping("/{id}")
-    @Transactional
     public ResponseEntity<IncomeDTO> delete(@PathVariable final Long id) {
-        Optional<Income> receitaOptional = incomeService.findById(id);
-        if (receitaOptional.isPresent()) {
+        try {
             incomeService.deleteById(id);
             return ResponseEntity.ok().build();
+        } catch (EmptyResultDataAccessException e) {
+            return ResponseEntity.notFound().build();
         }
-
-        return ResponseEntity.notFound().build();
     }
 
 }

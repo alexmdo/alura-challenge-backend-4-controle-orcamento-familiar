@@ -283,7 +283,7 @@ class IncomeControllerTest {
                         """))
                 .andExpect(status().isBadRequest())
                 .andExpect(content().json("""
-                        [{"field":"description","error":"Duplicate income in the same month"}]"""));
+                        [{"field":"description","error":"Duplicated income in the same month"}]"""));
     }
 
     @Test

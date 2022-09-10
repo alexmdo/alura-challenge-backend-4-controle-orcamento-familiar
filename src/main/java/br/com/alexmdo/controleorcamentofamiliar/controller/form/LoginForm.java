@@ -10,7 +10,7 @@ public class LoginForm {
     private final String email;
     private final String password;
 
-    public Authentication convert() {
+    public Authentication adapt() {
         return new UsernamePasswordAuthenticationToken(this.email, this.password);
     }
 
